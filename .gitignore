@@ -1,5 +1,5 @@
 
-/gradle
+**/gradle
 
 ## Java
 
@@ -8,10 +8,10 @@
 *.ear
 hs_err_pid*
 
-.idea/**
 *.ipr
 *.iws
 *.iml
+*.jar
 com_crashlytics_export_strings.xml
 
 ## Eclipse
@@ -41,10 +41,15 @@ nb-configuration.xml
 ## Gradle
 
 /local.properties
-.gradle/
+**/.gradle/
 gradle-app.setting
 /build/
 
 ## OS Specific
 .DS_Store
 Thumbs.db
+
+# IntelliJ
+**/out/**
+**/.idea_modules/
+**/.idea/**
