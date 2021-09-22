@@ -49,7 +49,7 @@ private fun runPrompt() {
             println("Cannot run null prompt.")
             break
         } else {
-            run(line!!)
+            run(line)
             hadError = false
         }
     }
