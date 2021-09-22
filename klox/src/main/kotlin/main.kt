@@ -7,6 +7,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.system.exitProcess
 
+private var hadError = false
+
 fun main(args: Array<String>) {
     val argSize = args.size
 
@@ -29,6 +31,9 @@ private fun runFile(path: String) {
     val pathString = String(bytes, Charset.defaultCharset())
 
     run(pathString)
+    if (hadError) {
+        exitProcess(65)
+    }
 }
 
 private fun runPrompt() {
@@ -45,6 +50,7 @@ private fun runPrompt() {
             break
         } else {
             run(line!!)
+            hadError = false
         }
     }
 }
@@ -61,4 +67,16 @@ private fun run(source: String) {
         println(token)
     }
     */
+}
+
+
+// ERROR REPORTING
+
+fun error(line: Int, message: String) {
+    report(line, "", message)
+}
+
+private fun report(line: Int, where: String, message: String) {
+    System.err.println("[line $line] Error$where: $message")
+    hadError = true
 }
