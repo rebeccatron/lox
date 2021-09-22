@@ -49,8 +49,16 @@ private fun runPrompt() {
     }
 }
 
-private fun run(command: String) {
-    print("Running: $command")
+private fun run(source: String) {
+    print("Running: $source")
 
-    // TODO: Create scanner, get tokens, report each token!
+    /*
+    TODO: Create scanner, get tokens, report each token!
+    val scanner = Scanner(source)
+    val tokens = scanner.scanTokens()
+
+    for (token in tokens) {
+        println(token)
+    }
+    */
 }
