@@ -52,6 +52,9 @@ class Scanner constructor(private val source: String) {
             '=' -> addToken(if (match('=')) EQUAL_EQUAL else EQUAL)
             '<' -> addToken(if (match('=')) LESS_EQUAL else LESS)
             '>' -> addToken(if (match('=')) GREATER_EQUAL else GREATER)
+
+            // could be single character or whole comment!
+            '/' -> handleSlash()
         }
     }
 
@@ -77,5 +80,24 @@ class Scanner constructor(private val source: String) {
         current++
         return true
 
+    }
+
+    private fun handleSlash() {
+        if (match('/')) {
+            // handle comments to end of line
+            // Comments *are* lexemes, but we don't care about them so we skip retaining them as tokens
+            while (peek() != '\n' && !isAtEnd()) advance()
+        } else {
+            addToken(SLASH)
+        }
+    }
+
+    // like advance, but only a 'lookahead' so it doesn't advance the current pointer
+    private fun peek(): Char {
+        return if (isAtEnd()) {
+            '\n'
+        } else {
+            sourceChars[current]
+        }
     }
 }
