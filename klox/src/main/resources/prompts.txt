@@ -1,0 +1,6 @@
+"hello, world!" 123.34
+() {} != == ! =
+true false return class
+; * "niiice"
+asdf
+"ok bye"
