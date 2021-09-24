@@ -33,7 +33,7 @@ class Scanner constructor(private val source: String) {
     }
 
     private fun scanToken() {
-        when (advance()) {
+        when (val c = advance()) {
 
             // straightforward tokens
             '(' -> addToken(LEFT_PAREN)

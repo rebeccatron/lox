@@ -56,7 +56,7 @@ private fun runPrompt() {
 }
 
 private fun run(source: String) {
-    print("Running: $source")
+    println("Running: $source")
 
     val scanner = Scanner(source)
     val tokens = scanner.scanTokens()
@@ -65,6 +65,7 @@ private fun run(source: String) {
         println(token)
     }
 }
+
 
 
 // ERROR REPORTING
