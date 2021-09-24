@@ -1,5 +1,7 @@
 package me.bink.klox
 
+import me.bink.klox.TokenType.*
+
 class Scanner constructor(private val source: String) {
 
     private val tokens = ArrayList<Token>()
@@ -21,7 +23,7 @@ class Scanner constructor(private val source: String) {
         }
 
         // not strictly necessary to include an EOF token, but nice + tidy
-        tokens.add(Token(TokenType.EOF, "", null, line))
+        tokens.add(Token(EOF, "", null, line))
 
         return tokens
     }
@@ -32,16 +34,24 @@ class Scanner constructor(private val source: String) {
 
     private fun scanToken() {
         when (advance()) {
-            '(' -> addToken(TokenType.LEFT_PAREN)
-            ')' -> addToken(TokenType.RIGHT_PAREN)
-            '{' -> addToken(TokenType.LEFT_BRACE)
-            '}' -> addToken(TokenType.RIGHT_BRACE)
-            ',' -> addToken(TokenType.COMMA)
-            '.' -> addToken(TokenType.DOT)
-            '-' -> addToken(TokenType.MINUS)
-            '+' -> addToken(TokenType.PLUS)
-            ';' -> addToken(TokenType.SEMICOLON)
-            '*' -> addToken(TokenType.STAR)
+
+            // straightforward tokens
+            '(' -> addToken(LEFT_PAREN)
+            ')' -> addToken(RIGHT_PAREN)
+            '{' -> addToken(LEFT_BRACE)
+            '}' -> addToken(RIGHT_BRACE)
+            ',' -> addToken(COMMA)
+            '.' -> addToken(DOT)
+            '-' -> addToken(MINUS)
+            '+' -> addToken(PLUS)
+            ';' -> addToken(SEMICOLON)
+            '*' -> addToken(STAR)
+
+            // one or two-character tokens
+            '!' -> addToken(if (match('=')) BANG_EQUAL else BANG_EQUAL)
+            '=' -> addToken(if (match('=')) EQUAL_EQUAL else EQUAL)
+            '<' -> addToken(if (match('=')) LESS_EQUAL else LESS)
+            '>' -> addToken(if (match('=')) GREATER_EQUAL else GREATER)
         }
     }
 
@@ -56,5 +66,16 @@ class Scanner constructor(private val source: String) {
         val text = source.substring(start, current)
 
         tokens.add(Token(tokenType, text, literal, line))
+    }
+
+    private fun match(expected: Char): Boolean {
+        if (isAtEnd()) return false
+
+        if (sourceChars[current] != expected) return false;
+
+        // advance current, since this lexeme has more than one character
+        current++
+        return true
+
     }
 }
