@@ -4,7 +4,8 @@ import me.bink.klox.TokenType.*
 
 // range is inclusive
 internal val NUMBER_RANGE: CharRange = '0'.rangeTo('9')
-
+internal val LOWERCASE_ALPHA_RANGE: CharRange = 'a'.rangeTo('z')
+internal val UPPERCASE_ALPHA_RANGE: CharRange = 'A'.rangeTo('Z')
 
 class Scanner constructor(private val source: String) {
 
@@ -67,6 +68,7 @@ class Scanner constructor(private val source: String) {
             // strings
             '"' -> handleString()
 
+            // numbers, identifiers
             else -> handleOther(c)
         }
     }
@@ -74,6 +76,7 @@ class Scanner constructor(private val source: String) {
     private fun handleOther(c: Char) {
         when {
             isDigit(c) -> handleNumber()
+            isAlpha(c) -> handleIdentifier()
             else -> Lox.error(line, "Unexpected character: $c")
         }
     }
@@ -162,5 +165,42 @@ class Scanner constructor(private val source: String) {
 
         val numberString = source.substring(start, current)
         addToken(NUMBER, numberString.toDouble())
+    }
+
+    private fun isAlpha(character: Char): Boolean {
+        return character == '_'
+                || character in LOWERCASE_ALPHA_RANGE
+                || character in UPPERCASE_ALPHA_RANGE
+    }
+
+    private fun isAlphaNumeric(character: Char): Boolean {
+        return isDigit(character) || isAlpha(character)
+    }
+
+    private fun handleIdentifier() {
+        while (isAlphaNumeric(peek())) advance()
+
+        val keywordLiteral = source.substring(start, current)
+        addToken(Keywords[keywordLiteral] ?: IDENTIFIER)
+    }
+
+    companion object Keywords : HashMap<String, TokenType>() {
+        init {
+            put("and", AND)
+            put("class", CLASS)
+            put("else", ELSE)
+            put("false", FALSE)
+            put("for", FOR)
+            put("fun", FUN)
+            put("if", IF)
+            put("nil", NIL)
+            put("or", OR)
+            put("return", RETURN)
+            put("super", SUPER)
+            put("this", THIS)
+            put("true", TRUE)
+            put("var", VAR)
+            put("while", WHILE)
+        }
     }
 }
