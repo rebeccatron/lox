@@ -66,8 +66,6 @@ private fun run(source: String) {
     }
 }
 
-
-
 // ERROR REPORTING
 
 // object keyword helps declare a singleton in this usage

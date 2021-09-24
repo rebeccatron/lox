@@ -2,6 +2,10 @@ package me.bink.klox
 
 import me.bink.klox.TokenType.*
 
+// range is inclusive
+internal val NUMBER_RANGE: CharRange = '0'.rangeTo('9')
+
+
 class Scanner constructor(private val source: String) {
 
     private val tokens = ArrayList<Token>()
@@ -62,6 +66,15 @@ class Scanner constructor(private val source: String) {
 
             // strings
             '"' -> handleString()
+
+            else -> handleOther(c)
+        }
+    }
+
+    private fun handleOther(c: Char) {
+        when {
+            isDigit(c) -> handleNumber()
+            else -> Lox.error(line, "Unexpected character: $c")
         }
     }
 
@@ -108,9 +121,18 @@ class Scanner constructor(private val source: String) {
         }
     }
 
+    private fun peekNext(): Char {
+        val nextChar = current + 1
+        return if (nextChar >= source.length) {
+            '\n'
+        } else {
+            sourceChars[nextChar]
+        }
+    }
+
     private fun handleString() {
         while (peek() != '"' && !isAtEnd()) {
-            if (peek() == '\n') line ++
+            if (peek() == '\n') line++
             advance()
         }
 
@@ -122,5 +144,23 @@ class Scanner constructor(private val source: String) {
 
         val stringLiteral = source.substring(start + 1, current - 1) // trim the "'s
         addToken(STRING, stringLiteral)
+    }
+
+    private fun isDigit(character: Char): Boolean {
+        return character in NUMBER_RANGE
+    }
+
+    private fun handleNumber() {
+        while (isDigit((peek()))) advance()
+
+        // is there a '.'?
+        if (peek() == '.' && isDigit(peekNext())) {
+            advance() // consume the decimal point...
+
+            while (isDigit((peek()))) advance() // ...and all the following digits
+        }
+
+        val numberString = source.substring(start, current)
+        addToken(NUMBER, numberString.toDouble())
     }
 }
