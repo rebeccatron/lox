@@ -55,6 +55,10 @@ class Scanner constructor(private val source: String) {
 
             // could be single character or whole comment!
             '/' -> handleSlash()
+
+            // disregard whitespace
+            ' ', '\r', '\t' -> Unit // Unit is like void
+            '\n' -> line++
         }
     }
 
