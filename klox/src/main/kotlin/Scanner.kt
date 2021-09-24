@@ -59,6 +59,9 @@ class Scanner constructor(private val source: String) {
             // disregard whitespace
             ' ', '\r', '\t' -> Unit // Unit is like void
             '\n' -> line++
+
+            // strings
+            '"' -> handleString()
         }
     }
 
@@ -103,5 +106,21 @@ class Scanner constructor(private val source: String) {
         } else {
             sourceChars[current]
         }
+    }
+
+    private fun handleString() {
+        while (peek() != '"' && !isAtEnd()) {
+            if (peek() == '\n') line ++
+            advance()
+        }
+
+        if (isAtEnd()) {
+            Lox.error(line, "Unterminated string!")
+        }
+
+        advance() // Closing " finishing the string
+
+        val stringLiteral = source.substring(start + 1, current - 1) // trim the "'s
+        addToken(STRING, stringLiteral)
     }
 }

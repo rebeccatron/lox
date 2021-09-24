@@ -69,11 +69,12 @@ private fun run(source: String) {
 
 // ERROR REPORTING
 
-fun error(line: Int, message: String) {
-    report(line, "", message)
-}
+// object keyword helps declare a singleton in this usage
+// see: https://kotlinlang.org/docs/object-declarations.html#object-declarations-overview
+object Lox {
 
-private fun report(line: Int, where: String, message: String) {
-    System.err.println("[line $line] Error$where: $message")
-    hadError = true
+    fun error(line: Int, message: String) {
+        System.err.println("[line $line] Error${""}: $message")
+        hadError = true
+    }
 }
